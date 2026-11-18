@@ -3,59 +3,324 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Hilfe: Die Schachtel aus Karton</title>
+<title>Hilfe: Die offene Schachtel</title>
 <style>
-:root{--bg:#f6f7fa;--card:#fff;--text:#1d2430;--muted:#5d6877;--line:#d8dde6;--tip:#fff4d6;--tipb:#e0b44c;--sol:#e3f4e6;--solb:#5aa86a;--acc:#2f5fd0;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14171d;--card:#1e232c;--text:#e8ebf1;--muted:#9aa5b5;--line:#343b48;--tip:#3a3220;--tipb:#a98a35;--sol:#1f3326;--solb:#4a8f5a;--acc:#7da2ff}}
-:root[data-theme="dark"]{--bg:#14171d;--card:#1e232c;--text:#e8ebf1;--muted:#9aa5b5;--line:#343b48;--tip:#3a3220;--tipb:#a98a35;--sol:#1f3326;--solb:#4a8f5a;--acc:#7da2ff}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
-main{max-width:760px;margin:0 auto;padding:20px 16px 40px}
-h1{font-size:1.4rem;margin:0 0 .5rem}
-.task{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:18px}
-.row{background:var(--card);border:1px solid var(--line);border-radius:12px;margin-bottom:14px;overflow:hidden}
-.row h2{margin:0;padding:12px 16px;font-size:1rem;background:var(--bg);border-bottom:1px solid var(--line)}
-.body{padding:12px 16px}
-button{font:inherit;border-radius:8px;border:1px solid var(--line);padding:8px 14px;margin:0 8px 8px 0;cursor:pointer;background:var(--card);color:var(--text)}
-button.tip{border-color:var(--tipb)}
-button.sol{border-color:var(--solb)}
-button:disabled{opacity:.45;cursor:not-allowed}
-button:not(:disabled):hover{border-color:var(--acc)}
-.box{display:none;border-radius:8px;padding:10px 12px;margin-top:4px;border-left:4px solid}
-.box.show{display:block}
-.box.t{background:var(--tip);border-color:var(--tipb)}
-.box.s{background:var(--sol);border-color:var(--solb);font-family:ui-monospace,Menlo,monospace}
-.hint{color:var(--muted);font-size:.85rem}
+  :root {
+    --bg: #f5f6fa;
+    --card: #ffffff;
+    --border: #dfe2ea;
+    --text: #1f2430;
+    --muted: #5d6475;
+    --tip-bg: #fff4d6;
+    --tip-bd: #f0b429;
+    --sol-bg: #e3f4e4;
+    --sol-bd: #3f9a4a;
+    --accent: #2f6fdb;
+    --garden: #cfe8c4;
+    --garden-bd: #4f8a3c;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 16px; line-height: 1.5;
+  }
+  main { max-width: 760px; margin: 0 auto; padding: 24px 16px 48px; }
+  h1 { font-size: 1.35rem; margin: 0 0 14px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 14px; overflow: hidden; }
+  .card > h2 { font-size: 1rem; margin: 0; padding: 10px 14px; background: #f7f8fb; border-bottom: 1px solid var(--border); }
+  .card .body { padding: 12px 14px; }
+  .task { padding: 14px; }
+  .task small { color: var(--muted); }
+  .m { font-family: "Cambria Math", "STIX Two Math", "Times New Roman", serif; font-size: 1.08em; }
+  .m i { font-style: italic; }
+
+  /* Interaktives Rechteck */
+  .explore { display: grid; gap: 12px; }
+  .slider-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .slider-row input[type=range] { flex: 1; min-width: 180px; accent-color: var(--garden-bd); }
+  .slider-row output { font-weight: 600; min-width: 92px; }
+  .stage { display: flex; justify-content: center; }
+  .stage svg { width: 100%; max-width: 500px; height: auto; }
+  .facts { display: flex; gap: 10px; flex-wrap: wrap; }
+  .fact { background: #f7f8fb; border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; }
+  .fact b { font-variant-numeric: tabular-nums; }
+  .hint { color: var(--muted); font-size: .92rem; margin: 0; }
+  .fence-ok { color: var(--sol-bd); }
+
+  /* Tipp / Lösung */
+  .btns { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+  button {
+    font: inherit; padding: 6px 12px; border-radius: 6px; cursor: pointer; background: #fff;
+  }
+  .btn-tip { border: 1px solid var(--tip-bd); }
+  .btn-sol { border: 1px solid var(--sol-bd); }
+  button:disabled { cursor: not-allowed; opacity: .6; border-color: #b9bec9; }
+  .box { border-left: 4px solid; border-radius: 6px; padding: 8px 12px; margin-top: 6px; }
+  .box.tip { background: var(--tip-bg); border-color: var(--tip-bd); }
+  .box.sol { background: var(--sol-bg); border-color: var(--sol-bd); }
+  [hidden] { display: none !important; }
+
+  /* Umformungen mit Operationsstrichen */
+  .steps { display: grid; grid-template-columns: auto auto auto auto; column-gap: 8px; row-gap: 4px; align-items: baseline; width: max-content; max-width: 100%; }
+  .steps .l { text-align: right; }
+  .steps .eq { text-align: center; }
+  .steps .op { color: #8a4b00; padding-left: 14px; border-left: 2px solid #8a4b00; margin-left: 12px; white-space: nowrap; }
+  .steps .op.none { border-left-color: transparent; }
+  .sol p { margin: 4px 0; }
+  .sol .final { margin-top: 6px; font-weight: 600; }
+  .sep { margin: 10px 0 6px; font-size: .92rem; color: var(--muted); }
+
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 640px) { .two { grid-template-columns: 1fr; } }
+  .two figure { margin: 0; text-align: center; }
+  .two figcaption { font-size: .85rem; color: var(--muted); }
+  .two svg { width: 100%; height: auto; }
+  svg text { font-family: "Cambria Math", "Times New Roman", serif; }
 </style>
 </head>
 <body>
 <main>
-<h1>Hilfe zu Aufgabe 2: Die Schachtel aus Karton</h1>
-<div class="task"><b>Aufgabe 2:</b> Aus einem rechteckigen Kartonstück mit den Maßen 30 cm × 20 cm soll eine offene Schachtel hergestellt werden. Das <b>Volumen</b> der Schachtel soll möglichst groß werden. Stelle die Funktionsgleichung für den Sachverhalt auf.<br><span class="hint">Hinweis: Gehe wie in Aufgabe 1 vor. Die Größe x stellt die Höhe der Schachtel dar: An allen vier Ecken werden Quadrate mit der Seitenlänge x ausgeschnitten.</span></div>
-<div id="rows"></div>
+  <h1>Hilfe zu Aufgabe 2: Die offene Schachtel</h1>
+
+  <div class="card task">
+    <b>Aufgabe 2:</b> Aus einem rechteckigen Kartonstück mit den Maßen 30 cm × 20 cm soll eine offene Schachtel hergestellt werden. Das <b>Volumen</b> der Schachtel soll möglichst groß werden. Stelle die Funktionsgleichung für den Sachverhalt auf.<br>
+    <small>Gehe wie in Aufgabe 1 vor. Die Größe x ist die Höhe der Schachtel: An jeder Ecke wird ein Quadrat mit der Seitenlänge x herausgeschnitten.</small>
+  </div>
+
+  <!-- Interaktive Darstellung -->
+  <section class="card">
+    <h2>Ausprobieren: Wie verändert sich die Schachtel?</h2>
+    <div class="body explore">
+      <p class="hint">Verschiebe den Regler und beobachte: Was passiert mit Länge und Breite der Schachtel, wenn du die Ecken größer oder kleiner ausschneidest? Wann sieht die Schachtel am größten aus?</p>
+      <div class="slider-row">
+        <label for="xs"><span class="m"><i>x</i></span> wählen:</label>
+        <input type="range" id="xs" min="0" max="10" step="0.5" value="3">
+        <output id="xout" for="xs">x = 3 cm</output>
+      </div>
+      <div class="two">
+        <figure>
+          <svg id="net" viewBox="0 0 520 330" role="img" aria-label="Kartonstück mit ausgeschnittenen Ecken"></svg>
+          <figcaption>Karton von oben (ausgeschnittene Ecken gestrichelt)</figcaption>
+        </figure>
+        <figure>
+          <svg id="box" viewBox="0 0 560 330" role="img" aria-label="Gefaltete offene Schachtel"></svg>
+          <figcaption>Gefaltete Schachtel</figcaption>
+        </figure>
+      </div>
+      <div class="facts">
+        <div class="fact">Höhe <span class="m"><i>h</i></span> = <b id="fh"></b> cm</div>
+        <div class="fact">Länge <span class="m"><i>l</i></span> = <b id="fl"></b> cm</div>
+        <div class="fact">Breite <span class="m"><i>b</i></span> = <b id="fb"></b> cm</div>
+      </div>
+      <p class="hint">Tipp: Notiere dir für einige Werte von <i>x</i> die Länge und die Breite. Wie hängen sie mit 30 cm, 20 cm und <i>x</i> zusammen?</p>
+    </div>
+  </section>
+
+  <!-- Zeilen -->
+  <section class="card" data-row>
+    <h2>Zu optimierende Größe</h2>
+    <div class="body">
+      <div class="btns"><button class="btn-tip">💡 Tipp anzeigen</button><button class="btn-sol" disabled>✅ Lösung anzeigen</button></div>
+      <div class="box tip" hidden>Was soll am Ende möglichst groß (oder klein) werden? Lies den Aufgabentext noch einmal.</div>
+      <div class="box sol" hidden><p>Das <b>Volumen</b> <span class="m"><i>V</i></span> der Schachtel soll maximal werden.</p></div>
+    </div>
+  </section>
+
+  <section class="card" data-row>
+    <h2>Berechnungsformel</h2>
+    <div class="body">
+      <div class="btns"><button class="btn-tip">💡 Tipp anzeigen</button><button class="btn-sol" disabled>✅ Lösung anzeigen</button></div>
+      <div class="box tip" hidden>Die Schachtel ist ein Quader. Wie berechnet man das Volumen eines Quaders mit Länge <i>l</i>, Breite <i>b</i> und Höhe <i>h</i>?</div>
+      <div class="box sol" hidden><p class="m"><i>V</i> = <i>l</i> · <i>b</i> · <i>h</i></p></div>
+    </div>
+  </section>
+
+  <section class="card" data-row>
+    <h2>Nebenbedingungen aufstellen und umformen</h2>
+    <div class="body">
+      <div class="btns"><button class="btn-tip">💡 Tipp anzeigen</button><button class="btn-sol" disabled>✅ Lösung anzeigen</button></div>
+      <div class="box tip" hidden>Drücke Länge, Breite und Höhe mit <i>x</i> aus. Schau dir dazu den Karton von oben an: An <b>beiden</b> Enden jeder Seite wird ein Stück der Länge <i>x</i> abgeschnitten.</div>
+      <div class="box sol" hidden>
+        <p>Höhe: Die hochgeklappten Ränder sind <i>x</i> breit.</p>
+        <div class="steps m">
+          <span class="l"><i>h</i></span><span class="eq">=</span><span><i>x</i></span><span class="op none"></span>
+        </div>
+        <p>Länge: Von 30 cm werden links und rechts je <i>x</i> abgeschnitten.</p>
+        <div class="steps m">
+          <span class="l"><i>l</i></span><span class="eq">=</span><span>30 − <i>x</i> − <i>x</i></span><span class="op">zusammenfassen</span>
+          <span class="l"><i>l</i></span><span class="eq">=</span><span>30 − 2<i>x</i></span><span class="op none"></span>
+        </div>
+        <p>Breite: Von 20 cm werden oben und unten je <i>x</i> abgeschnitten.</p>
+        <div class="steps m">
+          <span class="l"><i>b</i></span><span class="eq">=</span><span>20 − <i>x</i> − <i>x</i></span><span class="op">zusammenfassen</span>
+          <span class="l"><i>b</i></span><span class="eq">=</span><span>20 − 2<i>x</i></span><span class="op none"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card" data-row>
+    <h2>Funktionsgleichung mit einer Variablen</h2>
+    <div class="body">
+      <div class="btns"><button class="btn-tip">💡 Tipp anzeigen</button><button class="btn-sol" disabled>✅ Lösung anzeigen</button></div>
+      <div class="box tip" hidden>Setze <i>l</i>, <i>b</i> und <i>h</i> in die Berechnungsformel <i>V</i> = <i>l</i> · <i>b</i> · <i>h</i> ein. Multipliziere zuerst die beiden Klammern aus, dann mit <i>x</i>.</div>
+      <div class="box sol" hidden>
+        <div class="steps m">
+          <span class="l"><i>V</i></span><span class="eq">=</span><span><i>l</i> · <i>b</i> · <i>h</i></span><span class="op"><i>l</i>, <i>b</i> und <i>h</i> einsetzen</span>
+          <span class="l"><i>V</i>(<i>x</i>)</span><span class="eq">=</span><span>(30 − 2<i>x</i>) · (20 − 2<i>x</i>) · <i>x</i></span><span class="op">Klammern ausmultiplizieren</span>
+          <span class="l"><i>V</i>(<i>x</i>)</span><span class="eq">=</span><span>(600 − 60<i>x</i> − 40<i>x</i> + 4<i>x</i>²) · <i>x</i></span><span class="op">zusammenfassen</span>
+          <span class="l"><i>V</i>(<i>x</i>)</span><span class="eq">=</span><span>(4<i>x</i>² − 100<i>x</i> + 600) · <i>x</i></span><span class="op">mit <i>x</i> multiplizieren</span>
+          <span class="l"><i>V</i>(<i>x</i>)</span><span class="eq">=</span><span>4<i>x</i>³ − 100<i>x</i>² + 600<i>x</i></span><span class="op none"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card" data-row>
+    <h2>Definitionsbereich 𝔻</h2>
+    <div class="body">
+      <div class="btns"><button class="btn-tip">💡 Tipp anzeigen</button><button class="btn-sol" disabled>✅ Lösung anzeigen</button></div>
+      <div class="box tip" hidden>Höhe, Länge und Breite können nicht negativ sein. Welche der beiden Seiten des Kartons wird zuerst „aufgebraucht“, wenn du <i>x</i> immer größer machst? Probiere es oben mit dem Regler aus.</div>
+      <div class="box sol" hidden>
+        <p>Bedingung 1 (Höhe): <span class="m"><i>x</i> ≥ 0</span></p>
+        <p>Bedingung 2 (Breite): <span class="m"><i>b</i> ≥ 0</span>, also</p>
+        <div class="steps m">
+          <span class="l">20 − 2<i>x</i></span><span class="eq">≥</span><span>0</span><span class="op">+ 2<i>x</i></span>
+          <span class="l">20</span><span class="eq">≥</span><span>2<i>x</i></span><span class="op">: 2</span>
+          <span class="l">10</span><span class="eq">≥</span><span><i>x</i></span><span class="op none"></span>
+        </div>
+        <p>Bedingung 3 (Länge): <span class="m"><i>l</i> ≥ 0</span>, also</p>
+        <div class="steps m">
+          <span class="l">30 − 2<i>x</i></span><span class="eq">≥</span><span>0</span><span class="op">+ 2<i>x</i></span>
+          <span class="l">30</span><span class="eq">≥</span><span>2<i>x</i></span><span class="op">: 2</span>
+          <span class="l">15</span><span class="eq">≥</span><span><i>x</i></span><span class="op none"></span>
+        </div>
+        <p>Alle Bedingungen müssen gleichzeitig gelten. Die Breite ist die strengere Bedingung (<i>x</i> ≤ 10).</p>
+        <p class="final m">𝔻 = [0; 10]</p>
+      </div>
+    </div>
+  </section>
 </main>
+
 <script>
-var data=[
-{t:"Zu optimierende Größe",tip:"Was soll am Ende möglichst groß werden? Lies den Aufgabentext noch einmal.",sol:"Volumen eines Quaders (der Schachtel)"},
-{t:"Berechnungsformel",tip:"Wie berechnet man das Volumen eines Quaders mit Länge a, Breite b und Höhe h?",sol:"V = a · b · h"},
-{t:"Nebenbedingungen + Umformung",tip:"Die Höhe ist x. Von der Länge 30 cm und der Breite 20 cm wird an beiden Enden jeweils x abgeschnitten (hochgeklappt). Drücke a, b und h mit x aus.",sol:"h = x\na = 30 − 2x\nb = 20 − 2x"},
-{t:"Funktionsgleichung mit einer Variablen",tip:"Setze a, b und h in V = a · b · h ein und multipliziere die Klammern aus.",sol:"V(x) = (30 − 2x) · (20 − 2x) · x\n     = 4x³ − 100x² + 600x"},
-{t:"Definitionsbereich D",tip:"Die Höhe x kann nicht negativ sein. Außerdem darf keine Seitenlänge negativ werden: Wann ist 20 − 2x ≥ 0 (die kürzere Seite ist entscheidend)?",sol:"D = [0; 10]"}
-];
-var wrap=document.getElementById("rows");
-data.forEach(function(d){
-  var r=document.createElement("section");r.className="row";
-  var h=document.createElement("h2");h.textContent=d.t;
-  var b=document.createElement("div");b.className="body";
-  var bt=document.createElement("button");bt.className="tip";bt.textContent="💡 Tipp anzeigen";
-  var bs=document.createElement("button");bs.className="sol";bs.textContent="✅ Lösung anzeigen";bs.disabled=true;bs.title="Sieh dir zuerst den Tipp an";
-  var tb=document.createElement("div");tb.className="box t";tb.textContent=d.tip;
-  var sb=document.createElement("div");sb.className="box s";sb.style.whiteSpace="pre-wrap";sb.textContent=d.sol;
-  bt.onclick=function(){tb.classList.toggle("show");bs.disabled=false;bs.title="";bt.textContent=tb.classList.contains("show")?"💡 Tipp verbergen":"💡 Tipp anzeigen";};
-  bs.onclick=function(){sb.classList.toggle("show");bs.textContent=sb.classList.contains("show")?"✅ Lösung verbergen":"✅ Lösung anzeigen";};
-  b.appendChild(bt);b.appendChild(bs);b.appendChild(tb);b.appendChild(sb);
-  r.appendChild(h);r.appendChild(b);wrap.appendChild(r);
-});
+/* ---------- Interaktive Schachtel ---------- */
+(function () {
+  const xs = document.getElementById('xs');
+  const NS = 'http://www.w3.org/2000/svg';
+  const fmt = v => String(Math.round(v * 100) / 100).replace('.', ',');
+  const el = (tag, attrs, txt) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (txt !== undefined) e.innerHTML = txt; return e; };
+  const lab = (v, name) => '<tspan font-style="italic">' + name + '</tspan> = ' + fmt(v) + ' cm';
+  const CARD = '#f1e3c4', CARD_D = '#e2cd9f', CARD_DD = '#cdb37c', EDGE = '#7a5c2e';
+
+  function dimH(svg, x1, x2, y, text) {   // waagerechter Maßpfeil
+    svg.append(el('line', { x1, y1: y, x2, y2: y, stroke: '#555', 'stroke-width': 1.5 }));
+    svg.append(el('line', { x1, y1: y - 6, x2: x1, y2: y + 6, stroke: '#555', 'stroke-width': 1.5 }));
+    svg.append(el('line', { x1: x2, y1: y - 6, x2, y2: y + 6, stroke: '#555', 'stroke-width': 1.5 }));
+    svg.append(el('text', { x: (x1 + x2) / 2, y: y - 8, 'text-anchor': 'middle', 'font-size': 19, fill: '#333' }, text));
+  }
+  function dimV(svg, x, y1, y2, text, anchor) { // senkrechter Maßpfeil
+    svg.append(el('line', { x1: x, y1, x2: x, y2, stroke: '#555', 'stroke-width': 1.5 }));
+    svg.append(el('line', { x1: x - 6, y1, x2: x + 6, y2: y1, stroke: '#555', 'stroke-width': 1.5 }));
+    svg.append(el('line', { x1: x - 6, y1: y2, x2: x + 6, y2, stroke: '#555', 'stroke-width': 1.5 }));
+    const dx = anchor === 'end' ? -10 : 10;
+    svg.append(el('text', { x: x + dx, y: (y1 + y2) / 2 + 5, 'text-anchor': anchor, 'font-size': 19, fill: '#333' }, text));
+  }
+
+  function drawNet(x) {
+    const svg = document.getElementById('net'); svg.innerHTML = '';
+    const k = 10, W = 30 * k, H = 20 * k, ox = 120, oy = 55, c = x * k;
+    // Karton ohne Ecken
+    const pts = [[ox + c, oy], [ox + W - c, oy], [ox + W - c, oy + c], [ox + W, oy + c], [ox + W, oy + H - c], [ox + W - c, oy + H - c],
+                 [ox + W - c, oy + H], [ox + c, oy + H], [ox + c, oy + H - c], [ox, oy + H - c], [ox, oy + c], [ox + c, oy + c]];
+    svg.append(el('polygon', { points: pts.map(p => p.join(',')).join(' '), fill: CARD, stroke: EDGE, 'stroke-width': 2 }));
+    // Ausgeschnittene Ecken
+    if (c > 0) [[ox, oy], [ox + W - c, oy], [ox, oy + H - c], [ox + W - c, oy + H - c]].forEach(([a, b]) =>
+      svg.append(el('rect', { x: a, y: b, width: c, height: c, fill: 'none', stroke: '#999', 'stroke-dasharray': '4 3' })));
+    // Faltlinien (Boden)
+    if (c > 0) svg.append(el('rect', { x: ox + c, y: oy + c, width: Math.max(W - 2 * c, 0.5), height: Math.max(H - 2 * c, 0.5), fill: CARD_D, stroke: EDGE, 'stroke-width': 1.2 }));
+    // Maße
+    dimH(svg, ox, ox + W, oy - 28, '30 cm');
+    dimV(svg, ox + W + 30, oy, oy + H, '20 cm', 'start');
+    dimH(svg, ox + c, ox + W - c, oy + H + 28, lab(30 - 2 * x, 'l'));
+    dimV(svg, ox - 30, oy + c, oy + H - c, lab(20 - 2 * x, 'b'), 'end');
+    if (c > 0) svg.append(el('text', { x: ox + W - c / 2, y: oy + H - c / 2 + 5, 'text-anchor': 'middle', 'font-size': 17, fill: '#555' }, '<tspan font-style="italic">x</tspan>'));
+  }
+
+  function drawBox(x) {
+    const svg = document.getElementById('box'); svg.innerHTML = '';
+    const k = 8, L = (30 - 2 * x) * k, B = (20 - 2 * x) * k, Hh = x * k;
+    const ex = [L, 0], ed = [B * 0.45 * Math.cos(Math.PI / 6), -B * 0.45 * Math.sin(Math.PI / 6)], eh = [0, -Hh];
+    const P0 = [125, 285];
+    const add = (...vs) => vs.reduce((a, v) => [a[0] + v[0], a[1] + v[1]], [0, 0]);
+    const poly = (ps, fill) => svg.append(el('polygon', { points: ps.map(p => p.join(',')).join(' '), fill, stroke: EDGE, 'stroke-width': 1.5, 'stroke-linejoin': 'round' }));
+    const A = P0, Bp = add(P0, ex), C = add(P0, ex, ed), D = add(P0, ed);
+    const up = p => add(p, eh);
+    poly([A, Bp, C, D], CARD_DD);                       // Boden
+    poly([D, C, up(C), up(D)], CARD_D);                  // Rückwand
+    poly([A, D, up(D), up(A)], CARD_D);                  // linke Wand
+    poly([Bp, C, up(C), up(Bp)], CARD);                  // rechte Wand
+    poly([A, Bp, up(Bp), up(A)], CARD);                  // Vorderwand
+    // Maße
+    dimH(svg, A[0], Bp[0], A[1] + 28, lab(30 - 2 * x, 'l'));
+    dimV(svg, A[0] - 22, up(A)[1], A[1], lab(x, 'h'), 'end');
+    // Breite entlang der Tiefe
+    const s = [Bp[0] + 14, Bp[1] + 8], e = [C[0] + 14, C[1] + 8];
+    svg.append(el('line', { x1: s[0], y1: s[1], x2: e[0], y2: e[1], stroke: '#555', 'stroke-width': 1.5 }));
+    svg.append(el('text', { x: (s[0] + e[0]) / 2 + 10, y: (s[1] + e[1]) / 2 + 14, 'text-anchor': 'start', 'font-size': 19, fill: '#333' }, lab(20 - 2 * x, 'b')));
+  }
+
+  function draw() {
+    const x = Number(xs.value);
+    document.getElementById('xout').textContent = 'x = ' + fmt(x) + ' cm';
+    document.getElementById('fh').textContent = fmt(x);
+    document.getElementById('fl').textContent = fmt(30 - 2 * x);
+    document.getElementById('fb').textContent = fmt(20 - 2 * x);
+    drawNet(x); drawBox(x);
+  }
+  xs.addEventListener('input', draw);
+  draw();
+})();
+
+/* ---------- Tipp / Lösung mit 30-s-Sperre ---------- */
+(function () {
+  const WAIT = 30; // Sekunden
+  document.querySelectorAll('[data-row]').forEach(row => {
+    const bTip = row.querySelector('.btn-tip');
+    const bSol = row.querySelector('.btn-sol');
+    const tip = row.querySelector('.box.tip');
+    const sol = row.querySelector('.box.sol');
+    let unlockAt = null, timer = null;
+
+    function tick() {
+      const left = Math.ceil((unlockAt - Date.now()) / 1000);
+      if (left > 0) {
+        bSol.disabled = true;
+        bSol.textContent = '⏳ Lösung in ' + left + ' s';
+      } else {
+        clearInterval(timer);
+        bSol.disabled = false;
+        bSol.textContent = sol.hidden ? '✅ Lösung anzeigen' : '✅ Lösung verbergen';
+      }
+    }
+
+    bTip.addEventListener('click', () => {
+      tip.hidden = !tip.hidden;
+      bTip.textContent = tip.hidden ? '💡 Tipp anzeigen' : '💡 Tipp verbergen';
+      if (unlockAt === null) {           // Countdown startet beim ersten Öffnen des Tipps
+        unlockAt = Date.now() + WAIT * 1000;
+        tick();
+        timer = setInterval(tick, 250);
+      }
+    });
+
+    bSol.addEventListener('click', () => {
+      if (bSol.disabled) return;
+      sol.hidden = !sol.hidden;
+      bSol.textContent = sol.hidden ? '✅ Lösung anzeigen' : '✅ Lösung verbergen';
+    });
+  });
+})();
 </script>
 </body>
 </html>
